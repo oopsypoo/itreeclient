@@ -138,7 +138,8 @@ class itreeClient
     //echo "Received data:\n".$received_data."\n";
     stream_socket_shutdown($this->hsocket, STREAM_SHUT_RDWR);
   }
- 
+ //The GetData-function should return different types of data, depending on
+ //parameter given...1 represent unformated data. 2 - in table form, 3 - data stored in a 2-dim array
   public function GetData()
   {
     return $this->received_data;
