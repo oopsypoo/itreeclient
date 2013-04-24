@@ -1,0 +1,132 @@
+<?php
+	header('Content-language: nb-NO');	
+	header('Content-type: text/html; charset=UTF-8');
+	$title = "itree-php-client-test";
+	$item = "";
+	
+	echo <<<END
+
+	<!DOCTYPE HTML>
+	<html>
+	<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta name="description" content="Testing the itree-client. The php-version. Testing connection to home-computer" />
+	<meta name="keywords" content="iTree, itreeclient, itree-client, itree client, php cilent" />
+	<title>{$title}</title>
+	</head>
+	<body>
+ 
+ <form action="index.php" method="get" enctype="application/x-www-form-urlencoded" target="_self">
+	<textarea name="lemma" rows="1" cols="20"></textarea><br />
+	<input name="soek" value="Søk" type="submit"></button>
+	</form>
+
+END;
+if($method = $_SERVER['REQUEST_METHOD']) 
+{
+	if($method == 'GET')
+	{
+		if(isset($_GET['lemma']))
+			$item = $_GET['lemma'];
+	}
+}
+$idlemma = $item;
+ echo "	<!-- now we get the synonyms   -->";
+ function trim_string($str) //returns a trimmed version of str 
+ {
+	$ret_val = $str;
+	$temp = strtok($str, '(');
+	//echo "<br><br>Dette er temp i trim_string:OO<b>".$temp."</b>OO<br><br>";
+	//strtok kind of behaved differently than one would think. Even if it does not find
+	//any tokens in the string it returns something. The input-string. So we cannot
+	//look for false, FALSE, EMPTY_STRING, or something like that...the only thing we can do
+	//is make a comparison from the original string. IS it different or not.
+	if($temp !== $ret_val)//if we found the token '('
+	{
+		$n = strlen($temp);
+		$ret_val = substr($temp, 0, $n-1);
+	}
+	return $ret_val;
+ }
+if($idlemma != NULL)
+{
+	//we have to scan the string and remove any descriptions in the 
+	$temp = $idlemma;
+	$idlemma = trim_string($temp);
+	include_once("itreeclient.php");
+	$obj = new itreeClient;
+	$obj->itreeSendRq('84.212.23.235', 80,$idlemma);
+	$received_data = $obj->GetData();
+//echo "Data funnet: ".$received_data."<br />";
+
+//	$received_data is a string or an array that contains data. It is either a message i.e. "Nothing returned..".
+//or data in the form (type1)|syn1|syn2
+//														(type2)|syn3|syn4
+//															....			..		..
+//														(typeN)|synA|synB
+
+ 	$data = '';
+ 	echo $received_data."<br /><br /><br /><br />\n\n\n";
+ 	
+	  if($received_data !== "Nothing returned..")
+	  {
+		  $string = strtok($received_data, "\n");
+		  if($string !== false) 
+		  {
+			  $n = 0;
+			  $data[$n++] = $string;
+			  while($string !== false) 
+			  {
+				  $string = strtok("\n");
+				  if($string !== false)
+					  $data[$n++] = $string;
+			  }
+		  }
+		  echo "<table style=\"border:1px solid;\">\n";
+		  echo "<tr>\n";
+		  echo "<th>Type</th>\n";
+		  echo "<th>Synonymer</th>\n";
+		  echo "</tr>\n";
+		  foreach($data as $val)
+		  {
+  //			echo "Dette er val: ".$val."<br>";
+			  
+			  $p = 0;
+			  $string = strtok($val,"|");
+			  if($string !== false) 
+			  {
+				  echo "<tr>\n";
+				  echo "<td style=\"border:1px solid;\">".$string."</td>\n";
+				  echo "<td style=\"border:1px solid;\">\n";
+				  while($string !== false)
+				  {
+					  $string = strtok("|");
+					  if($string !== false)
+					  {
+						  if($p == 0)//and we add a link
+							  echo "<a href=\"?lemma=$string\">".$string."</a>";
+						  else 
+							  echo ", "."<a href=\"?lemma=$string\">".$string."</a>";
+						  $p++;
+					  }
+				  }
+				  
+				  echo "</td>\n";
+				  echo "</tr>\n";
+			  }	
+		  }
+		  echo "</table>\n";
+	  }
+}
+		
+echo <<<END
+
+ </body>
+ </html>
+END;
+
+
+?>	
+	

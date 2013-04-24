@@ -1,0 +1,4 @@
+[Project]
+Name=itree
+Manager=KDevGenericManager
+VersionControl=kdevgit
