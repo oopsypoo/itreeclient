@@ -138,10 +138,99 @@ class itreeClient
     //echo "Received data:\n".$received_data."\n";
     stream_socket_shutdown($this->hsocket, STREAM_SHUT_RDWR);
   }
- //The GetData-function should return different types of data, depending on
- //parameter given...1 represent unformated data. 2 - in table form, 3 - data stored in a 2-dim array
-  public function GetData()
+  //rearranges the string_data and returns a 2-dimensional array
+  private function rearrangeArray()
   {
+    $string = $this->received_data;
+    $str = explode("\n", $string);
+      //echo $str."\n";
+    $n = 0;
+    $t = count($str);
+    while($n < $t) 
+    {
+      $p = 0;
+      $data[$n][$p] = strtok($str[$n], '|\0');
+      while ($data[$n][$p] !== false) 
+      {
+	$p++;
+	$data[$n][$p] = strtok('|\0');
+      }
+      $n++;
+    }
+    return $data;
+  }
+  private function echoDataTable($tclass)
+  {
+    $rdata = $this->received_data;
+    $data = '';
+    $string = strtok($rdata, "\n");
+    if($string !== false) 
+    {
+	    $n = 0;
+	    $data[$n++] = $string;
+	    while($string !== false) 
+	    {
+		    $string = strtok("\n");
+		    if($string !== false)
+			    $data[$n++] = $string;
+	    }
+    }
+    echo "<table style=\"border:1px solid;\">\n";
+    echo "<tr>\n";
+    echo "<th>Type</th>\n";
+    echo "<th>Synonymer</th>\n";
+    echo "</tr>\n";
+    foreach($data as $val)
+    {
+//			echo "Dette er val: ".$val."<br>";
+	    
+	    $p = 0;
+	    $string = strtok($val,"|");
+	    if($string !== false) 
+	    {
+		    echo "<tr>\n";
+		    echo "<td style=\"border:1px solid;\">".$string."</td>\n";
+		    echo "<td style=\"border:1px solid;\">\n";
+		    while($string !== false)
+		    {
+			    $string = strtok("|");
+			    if($string !== false)
+			    {
+				    if($p == 0)//and we add a link
+					    echo "<a href=\"?lemma=$string\">".$string."</a>";
+				    else 
+					    echo ", "."<a href=\"?lemma=$string\">".$string."</a>";
+				    $p++;
+			    }
+		    }
+		    
+		    echo "</td>\n";
+		    echo "</tr>\n";
+	    }	
+    }
+    echo "</table>\n";
+  }
+ //The GetData-function should return different types of data, depending on
+ //parameter given...2 represent unformated data. 1 - in table form, 3 - data stored in a 2-dim array
+ //default data is raw data( 1 ).
+ //table form meens it echoes out the data in html table form.
+  public function GetData($dt, $tclass = NULL)
+  {
+    switch ($dt) 
+    {
+      case 1:
+	$this->echoDataTable($tclass);
+	break;
+      case 2:
+	return $this->received_data;
+      case 3:
+	return rearrangeArray();
+      default:
+        $this->echoDataTable($tclass);
+	break;
+      
+    }
+    
     return $this->received_data;
   }
   public function validObject()

@@ -51,9 +51,7 @@ END;
 			goto end_script;
 	}
 	
-	$rdata = $obj->GetData();
-
-
+	
 //	$rdata is a string or an array that contains data. It is either a message i.e. "Nothing returned..".
 //or data in the form (type1)|syn1|syn2
 //														(type2)|syn3|syn4
@@ -65,53 +63,7 @@ END;
  	
 	  if($item !== NULL)
 	  {
-		  $data = '';
-		  $string = strtok($rdata, "\n");
-		  if($string !== false) 
-		  {
-			  $n = 0;
-			  $data[$n++] = $string;
-			  while($string !== false) 
-			  {
-				  $string = strtok("\n");
-				  if($string !== false)
-					  $data[$n++] = $string;
-			  }
-		  }
-		  echo "<table style=\"border:1px solid;\">\n";
-		  echo "<tr>\n";
-		  echo "<th>Type</th>\n";
-		  echo "<th>Synonymer</th>\n";
-		  echo "</tr>\n";
-		  foreach($data as $val)
-		  {
-  //			echo "Dette er val: ".$val."<br>";
-			  
-			  $p = 0;
-			  $string = strtok($val,"|");
-			  if($string !== false) 
-			  {
-				  echo "<tr>\n";
-				  echo "<td style=\"border:1px solid;\">".$string."</td>\n";
-				  echo "<td style=\"border:1px solid;\">\n";
-				  while($string !== false)
-				  {
-					  $string = strtok("|");
-					  if($string !== false)
-					  {
-						  if($p == 0)//and we add a link
-							  echo "<a href=\"?lemma=$string\">".$string."</a>";
-						  else 
-							  echo ", "."<a href=\"?lemma=$string\">".$string."</a>";
-						  $p++;
-					  }
-				  }
-				  
-				  echo "</td>\n";
-				  echo "</tr>\n";
-			  }	
-		  }
-		  echo "</table>\n";
+		$obj->GetData(1);  
 	  }
 
 	}
