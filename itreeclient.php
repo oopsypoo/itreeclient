@@ -220,18 +220,16 @@ class itreeClient
     {
       case 1:
 	$this->echoDataTable($tclass);
-	break;
+	return;
       case 2:
 	return $this->received_data;
       case 3:
 	return rearrangeArray();
       default:
         $this->echoDataTable($tclass);
-	break;
-      
+	return;
     }
-    
-    return $this->received_data;
+    return NULL; //if none of the above, return NULL;
   }
   public function validObject()
   {
