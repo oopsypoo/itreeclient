@@ -14,7 +14,7 @@ class test
   function __construct($k)
   {
     if($k > 10)
-      throw new Exception("Value too big");./start
+      throw new Exception("Value too big");
     
     $this->a = $k;
   }
