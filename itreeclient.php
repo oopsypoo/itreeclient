@@ -159,7 +159,12 @@ class itreeClient
     }
     return $data;
   }
-  private function echoDataTable($tclass)
+  //I've given all table-tags it's own class. This is probably the easiest way to do this.
+  //All you have to do is create a class called "itreetable" an give it some style. This is
+  //in case there are other tables with other styles on the same page. I could of given
+  //it an id instead, but this would be a stupid solution if one wants to use the same style
+  //on other tables..
+  private function echoDataTable()
   {
     $rdata = $this->received_data;
     $data = '';
@@ -175,11 +180,13 @@ class itreeClient
 			    $data[$n++] = $string;
 	    }
     }
-    echo "<table style=\"border:1px solid;\">\n";
-    echo "<tr>\n";
-    echo "<th>Type</th>\n";
-    echo "<th>Synonymer</th>\n";
+    echo "<table class=\"itreetable\">\n";
+    echo "<thead class=\"itreetable\">\n";
+    echo "<tr class=\"itreetable\">\n";
+    echo "<th class=\"itreetable\">Type</th>\n";
+    echo "<th class=\"itreetable\">Synonymer</th>\n";
     echo "</tr>\n";
+    echo "</thead>\n";
     foreach($data as $val)
     {
 //			echo "Dette er val: ".$val."<br>";
@@ -188,9 +195,9 @@ class itreeClient
 	    $string = strtok($val,"|");
 	    if($string !== false) 
 	    {
-		    echo "<tr>\n";
-		    echo "<td style=\"border:1px solid;\">".$string."</td>\n";
-		    echo "<td style=\"border:1px solid;\">\n";
+		    echo "<tr class=\"itreetable\">\n";
+		    echo "<td class=\"itreetable\">".$string."</td>\n";
+		    echo "<td class=\"itreetable\">\n";
 		    while($string !== false)
 		    {
 			    $string = strtok("|");
@@ -214,19 +221,19 @@ class itreeClient
  //parameter given...2 represent unformated data. 1 - in table form, 3 - data stored in a 2-dim array
  //default data is raw data( 1 ).
  //table form meens it echoes out the data in html table form.
-  public function GetData($dt, $tclass = NULL)
+  public function GetData($dt)
   {
     switch ($dt) 
     {
       case 1:
-	$this->echoDataTable($tclass);
+	$this->echoDataTable();
 	return;
       case 2:
 	return $this->received_data;
       case 3:
 	return rearrangeArray();
       default:
-        $this->echoDataTable($tclass);
+        $this->echoDataTable();
 	return;
     }
     return NULL; //if none of the above, return NULL;

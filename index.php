@@ -15,10 +15,45 @@
 	<meta name="description" content="Testing the itree-client. The php-version. Testing connection to home-computer" />
 	<meta name="keywords" content="iTree, itreeclient, itree-client, itree client, php cilent" />
 	<title>{$title}</title>
+	<!-- Here's a styling example to the itreetable-data. I've used the tag <thead> so that we can easily style
+	the header. i.e. first row. (If you use do it this way or link via a css-script should not make any difference.
+	-->
+	<style>
+	  table.itreetable {
+		  font: 11px/24px Verdana, Arial, Helvetica, sans-serif;
+		  border-collapse: collapse;
+		  width: 640px;
+		  }
+
+	  th.itreetable {
+		  padding: 0 0.5em;
+		  text-align: left;
+		  }
+
+	  thead.itreetable{
+		  border-top: 1px solid #FB7A31;
+		  border-bottom: 1px solid #FB7A31;
+		  background-color: #FFC;
+		  }
+	  
+	  td.itreetable {
+		  border-bottom: 1px solid #CCC;
+		  padding: 0 0.5em;
+		  }
+	  
+	  td.itreetable:first-child {
+		  width: 150px;
+		  }
+
+	  td.itreetable+td.itreetable {
+		  border-left: 3px solid #CCC;
+		  text-align: center;
+		  }
+	</style>
 	</head>
 	<body>
 	<form action="index.php" method="get" enctype="application/x-www-form-urlencoded" target="_self">
-	<input type="text" name="lemma" rows="1" cols="20" placeholder="Søkeord" /><br />
+	<input type="text" name="lemma" placeholder="Søkeord" size="25" /><br />
 	<input name="soek" value="Søk" type="submit" />
 	</form>
 END;
