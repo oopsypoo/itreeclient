@@ -1,0 +1,7 @@
+#ignore kdev files
+*.kdev4
+#ignore kdev cache-files
+*.php~
+#ignore dir
+**/test
+/.project
